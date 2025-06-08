@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прайс</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="shop">
+        <div class="header">
+            <img class="bgd" src="https://cdn1-media.rabota.ru/processor/logo/original/2022/08/12/bolshojj-gostinyjj-dvor-0f567a1ab56059bef09e4aeeea97eadf.jpg" alt="">
+            <h1>Магазин</h1>
+            <input oninput="findProduct()" class="find" type="text" placeholder="Поиск">
+            <img class="bgd" src="https://avatars.mds.yandex.net/i?id=f78f6bd3ac9ae504eb023ecf202bcbd1_l-5233099-images-thumbs&n=13" alt="" >
+        </div>
+        <div class="products">
+            <div class="product">
+                <img class="imgProd" src="" alt="">
+                <div class="pTitle">
+                <p class="title"></p>
+                <p class="desc"></p>
+                <p class="price"></p>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+         window.onload = loadItems;
+        let product = document.querySelector('.products');
+        let input = document.querySelector('.find');
+
+        async function loadItems() {
+      try {
+        const response = await fetch('/items');
+        const items = await response.json();
+        
+        product.innerHTML = '';
+            for(let i=0; i < items.length; i++){
+                product.innerHTML += `
+                <div class="product">
+                    <img src="${items[i].Image}" alt="">
+                    <p class="title">${items[i].Title}</p>
+                    <p class="desc">${items[i].Description}</p>
+                    <p class="price">${items[i].cost} руб.</p>
+                    <button class="butBy">Добавить в корзину</button>
+                </div>`;
+            }
+        
+
+      } catch (err) {
+        console.error('Ошибка:', err);
+      }
+    }
+    
+    // Загружаем данные при загрузке страницы
+   
+        // let items=[
+        //     {
+        //         id: 'УТ-00810668',
+        //         title: 'ПК Трюфели Экстра мини (телевизор) 250г',
+        //         desc: 'Шоколадные конфеты',
+        //         price: 449,
+        //         img: 'https://cdn1.ozone.ru/s3/multimedia-b/6013346507.jpg',
+        //         keywords: 'Кондитеpские изделия',
+        //     },
+        //     ];
+
+        //         printItems(items);
+
+        //     function printItems(items) {
+        //     product.innerHTML = '';
+        //     for(let i=0; i < items.length; i++){
+        //         product.innerHTML += `
+        //         <div class="product">
+        //             <img src="${items[i].img}" alt="">
+        //             <p class="title">${items[i].title}</p>
+        //             <p class="desc">${items[i].desc}</p>
+        //             <p class="price">${items[i].price} руб.</p>
+        //             <button class="butBy">Добавить в корзину</button>
+        //         </div>`;
+        //     }
+        //     }
+
+        function findProduct(products = items){
+            let text = input.value.toLowerCase();
+            if(text.length < 1) {
+                printItems(items);
+                return
+            }
+            let newProducts = [];
+            for(let i = 0; i < products.length; i++){
+                if(products[i].title.toLowerCase().includes(text) || products[i].keywords.toLowerCase().includes(text)
+                || products[i].desc.toLowerCase().includes(text)){
+                    newProducts.push(products[i])
+                } 
+            }
+            printItems(newProducts);
+        }
+    </script>
+</body>
+</html>

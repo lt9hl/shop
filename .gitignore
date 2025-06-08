@@ -1,0 +1,6 @@
+.docker
+.env
+.idea
+db/mysql/*
+logs/*
+docker-compose.yml
